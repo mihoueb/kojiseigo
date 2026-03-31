@@ -3,43 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>故事成語の旅 - 物語から学ぶ、古の知恵</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <title>故事成語の旅</title>
     <style>
-        :root {
-            --bg-gradient: linear-gradient(135deg, #1a1410 0%, #2d1810 50%, #1a1410 100%);
-            --gold: #d4af37;
-            --gold-light: #f4e4c1;
-            --card-bg: linear-gradient(135deg, rgba(46, 28, 16, 0.9) 0%, rgba(26, 20, 16, 0.9) 100%);
-            --border-gold: rgba(212, 175, 55, 0.2);
-        }
-
-        body, html {
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Serif JP', 'Yu Mincho', 'YuMincho', serif;
+            background: linear-gradient(135deg, #1a1410 0%, #2d1810 50%, #1a1410 100%);
             min-height: 100vh;
-            font-family: "Noto Serif JP", "Yu Mincho", "YuMincho", serif;
-            background: var(--bg-gradient);
-            color: var(--gold-light);
+            padding: 2rem;
+            color: #f4e4c1;
+            position: relative;
             overflow-x: hidden;
         }
 
         /* 背景装飾 */
-        .bg-decoration {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background-image: 
                 radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
                 radial-gradient(circle at 80% 70%, rgba(139, 69, 19, 0.03) 0%, transparent 50%);
             pointer-events: none;
-            z-index: -1;
         }
 
         .container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 2rem;
+            position: relative;
         }
 
         /* ヘッダー */
@@ -54,6 +53,7 @@
             background: linear-gradient(135deg, #d4af37 0%, #f4e4c1 50%, #d4af37 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 0.5rem;
             letter-spacing: 0.1em;
         }
@@ -64,7 +64,7 @@
             letter-spacing: 0.2em;
         }
 
-        /* 進捗表示 */
+        /* 進捗バー */
         .progress-bar {
             display: flex;
             justify-content: space-between;
@@ -72,59 +72,90 @@
             padding: 1rem 1.5rem;
             background: rgba(139, 69, 19, 0.2);
             border-radius: 12px;
-            border: 1px solid var(--border-gold);
+            border: 1px solid rgba(212, 175, 55, 0.2);
             margin-bottom: 2rem;
         }
 
-        .progress-info { display: flex; align-items: center; gap: 0.5rem; }
+        .progress-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #f4e4c1;
+            font-size: 0.95rem;
+        }
+
+        .score-info {
+            color: #d4af37;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
 
         /* メインカード */
         .main-card {
-            background: var(--card-bg);
+            background: linear-gradient(135deg, rgba(46, 28, 16, 0.9) 0%, rgba(26, 20, 16, 0.9) 100%);
             border-radius: 20px;
             padding: 3rem;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(212, 175, 55, 0.1);
-            border: 2px solid var(--border-gold);
-            position: relative;
+            border: 2px solid rgba(212, 175, 55, 0.2);
             min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         /* ストーリー表示 */
         .story-text {
             font-size: 1.4rem;
             line-height: 2.2;
+            color: #f4e4c1;
             margin-bottom: 2rem;
             padding: 1.5rem;
             background: rgba(212, 175, 55, 0.05);
             border-radius: 12px;
-            border-left: 4px solid var(--gold);
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 4px solid #d4af37;
             opacity: 0;
             transform: translateY(20px);
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
-        .story-text.active {
-            opacity: 1;
-            transform: translateY(0);
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        /* インジケーター */
-        .indicators {
+        /* ステップインジケーター */
+        .step-indicators {
             display: flex;
             gap: 0.5rem;
             justify-content: center;
             margin-bottom: 2rem;
         }
 
-        .dot {
+        .step-dot {
             height: 12px;
             border-radius: 6px;
             background: rgba(212, 175, 55, 0.2);
             transition: all 0.4s ease;
         }
 
+        .step-dot.active {
+            width: 32px;
+            background: linear-gradient(90deg, #d4af37, #f4e4c1);
+        }
+
+        .step-dot.completed {
+            width: 12px;
+            background: linear-gradient(90deg, #d4af37, #f4e4c1);
+        }
+
+        .step-dot.upcoming {
+            width: 12px;
+        }
+
         /* ボタン */
-        .btn {
+        .btn-primary {
             background: linear-gradient(135deg, #d4af37 0%, #c9a961 100%);
             color: #1a1410;
             border: none;
@@ -133,7 +164,7 @@
             font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             margin: 0 auto;
@@ -142,13 +173,22 @@
             font-family: inherit;
         }
 
-        .btn:hover {
+        .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
         }
 
-        /* クイズ・選択肢 */
-        .choice-grid {
+        /* クイズ */
+        .quiz-title {
+            font-size: 1.8rem;
+            color: #d4af37;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+        }
+
+        .choices {
             display: grid;
             gap: 1rem;
             margin-bottom: 2rem;
@@ -160,424 +200,224 @@
             border-radius: 12px;
             padding: 1.5rem;
             font-size: 1.3rem;
-            color: var(--gold-light);
+            color: #f4e4c1;
             cursor: pointer;
             transition: all 0.3s ease;
             text-align: left;
             font-family: inherit;
+            font-weight: 500;
         }
 
-        .choice-btn:hover {
+        .choice-btn:hover:not(:disabled) {
             background: rgba(212, 175, 55, 0.2);
-            border-color: var(--gold);
+            border-color: #d4af37;
             transform: translateX(8px);
         }
 
+        .choice-btn.correct {
+            background: rgba(74, 222, 128, 0.2);
+            border-color: #4ade80;
+        }
+
+        .choice-btn.incorrect {
+            background: rgba(248, 113, 113, 0.2);
+            border-color: #f87171;
+        }
+
+        .choice-btn:disabled {
+            cursor: not-allowed;
+        }
+
         /* 結果表示 */
-        .result-header { text-align: center; margin-bottom: 2rem; }
-        .result-icon { margin-bottom: 1rem; }
-        
-        .explanation-card {
+        .result-icon {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 4rem;
+        }
+
+        .result-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .result-title.correct {
+            color: #4ade80;
+        }
+
+        .result-title.incorrect {
+            color: #f87171;
+        }
+
+        .idiom-info {
             background: rgba(212, 175, 55, 0.1);
             border-radius: 12px;
             padding: 2rem;
             margin-bottom: 2rem;
-            border: 1px solid var(--border-gold);
+            border: 1px solid rgba(212, 175, 55, 0.2);
         }
 
-        .explanation-idiom {
+        .idiom-name {
             font-size: 2.5rem;
-            color: var(--gold);
+            color: #d4af37;
+            margin-bottom: 0.5rem;
             font-weight: 600;
             text-align: center;
-            margin-bottom: 0.5rem;
         }
 
-        .explanation-reading {
-            text-align: center;
+        .idiom-reading {
+            font-size: 1.2rem;
             color: rgba(244, 228, 193, 0.7);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .idiom-meaning, .idiom-usage {
+            font-size: 1.1rem;
+            color: #f4e4c1;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .idiom-usage {
+            font-size: 1rem;
+            color: rgba(244, 228, 193, 0.8);
+            padding-left: 1rem;
+            border-left: 3px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .label {
+            color: #d4af37;
+            font-weight: bold;
+        }
+
+        /* 最終結果 */
+        .final-score {
+            text-align: center;
+            background: rgba(212, 175, 55, 0.15);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .final-score h3 {
+            font-size: 1.8rem;
+            color: #d4af37;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .final-score p {
+            font-size: 1.5rem;
+            color: #f4e4c1;
             margin-bottom: 1.5rem;
         }
 
-        .usage-box {
-            padding-left: 1rem;
-            border-left: 3px solid rgba(212, 175, 55, 0.3);
-            margin-top: 1rem;
-            color: rgba(244, 228, 193, 0.8);
+        /* データ構造説明 */
+        .data-structure {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: rgba(46, 28, 16, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            color: #f4e4c1;
+            font-size: 0.9rem;
+            line-height: 1.6;
         }
 
-        .hidden { display: none !important; }
+        .data-structure h3 {
+            color: #d4af37;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
 
+        .data-structure pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow: auto;
+            font-size: 0.85rem;
+            color: #d4af37;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* アイコン代替 */
+        .icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .main-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .story-text {
+                font-size: 1.2rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="bg-decoration"></div>
-
     <div class="container">
+        <!-- ヘッダー -->
         <header>
             <h1>故事成語の旅</h1>
             <p class="subtitle">物語から学ぶ、古の知恵</p>
         </header>
 
+        <!-- 進捗バー -->
         <div class="progress-bar">
             <div class="progress-info">
-                <i data-lucide="book-open" size="20"></i>
-                <span>問題 <span id="current-num">1</span> / <span id="total-num">5</span></span>
+                <span>📖</span>
+                <span>問題 <span id="currentNum">1</span> / <span id="totalNum">5</span></span>
             </div>
-            <div id="score-display" style="color: var(--gold); font-weight: 600;">
-                正解: 0 / 0
+            <div class="score-info">
+                正解: <span id="score">0</span> / <span id="answered">0</span>
             </div>
         </div>
 
-        <main class="main-card" id="game-container">
-            <div id="story-section">
-                <div class="story-text" id="story-content"></div>
-                <div class="indicators" id="step-indicators"></div>
-                <button class="btn" id="next-step-btn">
-                    <span>続きを読む</span>
-                    <i data-lucide="chevron-right"></i>
-                </button>
-            </div>
+        <!-- メインカード -->
+        <div class="main-card" id="mainCard"></div>
 
-            <div id="quiz-section" class="hidden">
-                <h2 style="text-align: center; color: var(--gold); margin-bottom: 2.5rem;">この物語の故事成語は？</h2>
-                <div class="choice-grid" id="choices-container"></div>
-            </div>
-
-            <div id="result-section" class="hidden">
-                <div class="result-header">
-                    <div id="result-icon-container"></div>
-                    <h2 id="result-text" style="font-size: 2rem;"></h2>
-                </div>
-                
-                <div class="explanation-card">
-                    <div class="explanation-idiom" id="result-idiom"></div>
-                    <div class="explanation-reading" id="result-reading"></div>
-                    <div id="result-meaning"></div>
-                    <div class="usage-box" id="result-usage"></div>
-                </div>
-
-                <div id="final-stats" class="hidden" style="text-align: center; background: rgba(212,175,55,0.15); padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
-                    <h3 style="color: var(--gold); font-size: 1.8rem;">全問完了！</h3>
-                    <p id="final-score-text" style="font-size: 1.5rem; margin: 1rem 0;"></p>
-                    <button class="btn" onclick="restartGame()">
-                        <i data-lucide="rotate-ccw"></i>
-                        最初から始める
-                    </button>
-                </div>
-
-                <button class="btn" id="next-question-btn">
-                    <span>次の問題へ</span>
-                    <i data-lucide="chevron-right"></i>
-                </button>
-            </div>
-        </main>
+        <!-- データ構造説明 -->
+        <div class="data-structure">
+            <h3>データ構造（65個の故事成語を追加できます）</h3>
+            <pre>{
+  id: 番号,
+  idiom: "故事成語",
+  reading: "よみがな",
+  story: [
+    "ストーリーの第1段階",
+    "ストーリーの第2段階",
+    "ストーリーの第3段階",
+    ...
+  ],
+  meaning: "意味の説明",
+  usage: "用例",
+  choices: ["選択肢1", "選択肢2", "選択肢3", "選択肢4"]
+}</pre>
+        </div>
     </div>
 
     <script>
-        const SAMPLE_KOJISEIGO = 
-                        {
+        const SAMPLE_KOJISEIGO = [
+            {
                 id: 1,
-                idiom: "矛盾",
-                reading: "むじゅん",
-                story: [
-                    "昔、中国の楚という国に、武器を売る商人がいました。",
-                    "彼は市場で、「この矛は何でも突き通せる最強の矛だ！」と大声で叫びました。",
-                    "次に盾を持ち上げて、「この盾はどんな攻撃も防げる最強の盾だ！」と宣伝しました。",
-                    "すると、ある客が尋ねました。「では、その矛でその盾を突いたらどうなるのですか？」",
-                    "商人は返答に窮し、何も言えなくなってしまいました。"
-                ],
-                meaning: "前に言ったことと、後で言ったことのつじつまが合わないこと。二つのことが同時には成り立たないこと。",
-                usage: "彼の説明は矛盾している。",
-                choices: ["矛盾", "完璧", "推敲", "杞憂"]
-            },
-            {
-                id: 2,
-                idiom: "完璧",
-                reading: "かんぺき",
-                story: [
-                    "紀元前3世紀、中国の趙という国に「和氏の璧」という美しい宝玉がありました。",
-                    "強国・秦の王が、この宝玉を欲しがり、趙王に「15の城と交換したい」と申し出ました。",
-                    "趙王は困りました。断れば秦に攻められ、応じても宝玉だけ奪われるかもしれません。",
-                    "家臣の藍相如が使者として秦に向かい、巧みな交渉で秦王を説得しました。",
-                    "藍相如は、宝玉を一つの傷もつけずに趙に持ち帰ることに成功したのです。"
-                ],
-                meaning: "大事なことを全うする。借りたものなどを無傷で返すこと。完全で欠点のないこと。",
-                usage: "彼の計画は完璧だ。",
-                choices: ["完璧", "矛盾", "蛇足", "双璧"]
-            },
-            {
-                id: 3,
-                idiom: "推敲",
-                reading: "すいこう",
-                story: [
-                    "唐の時代、賈島という詩人が、ロバに乗りながら詩を作っていました。",
-                    "彼は「僧は推す月下の門」という詩句を考えていました。",
-                    "しかし、「推す(押す)」と「敲く(叩く)」のどちらが良いか迷っていました。",
-                    "考え込んでいるうちに、偉い役人の行列にぶつかってしまいました。",
-                    "その役人こそ詩人の韓愈でした。韓愈は「敲くの方が良い」と助言し、二人は親しくなりました。"
-                ],
-                meaning: "文章や詩を書くとき、あれこれ直して最もよい言葉を探し、すぐれたものにすること。",
-                usage: "原稿を何度も推敲する。",
-                choices: ["推敲", "矛盾", "杜撰", "折檻"]
-            },
-            {
-                id: 4,
-                idiom: "杞憂",
-                reading: "きゆう",
-                story: [
-                    "古代中国の杞という国に、心配性な男がいました。",
-                    "ある日、男は「天が落ちてきたらどうしよう」と考え始めました。",
-                    "「大地が崩れてしまったらどうしよう」とも心配しました。",
-                    "男は心配のあまり、食事も喉を通らず、夜も眠れなくなってしまいました。",
-                    "友人がそんなことは起こらないと説明しても、男の心配は消えませんでした。"
-                ],
-                meaning: "あれこれ無用の心配をすること。取り越し苦労。",
-                usage: "それは杞憂に終わった。",
-                choices: ["杞憂", "圧巻", "白眉", "双璧"]
-            },
-            {
-                id: 5,
-                idiom: "蛇足",
-                reading: "だそく",
-                story: [
-                    "古代中国の楚という国で、使用人たちに酒が一杯だけ振る舞われることになりました。",
-                    "一人では足りないので、使用人たちは地面に蛇の絵を描いて、一番早く描けた者が飲むことにしました。",
-                    "一人の男が最も早く蛇を描き終えました。",
-                    "「まだ時間がある」と思った男は、蛇に足を描き加えました。",
-                    "その隙に別の男が蛇を描き終え、「蛇に足はない。お前が描いたのは蛇ではない」と言って酒を飲んでしまいました。"
-                ],
-                meaning: "不必要なことをすることのたとえ。",
-                usage: "その説明は蛇足だ。",
-                choices: ["蛇足", "矛盾", "画餅", "夏炉冬扇"]
-            },
-            {
-                id: 6,
-                idiom: "呉越同舟",
-                reading: "ごえつどうしゅう",
-                story: [
-                    "古代中国で、呉と越という二つの国は激しく対立していました。",
-                    "両国の人々は互いを憎み合い、顔を合わせれば争いになるほどでした。",
-                    "ある日、呉人と越人が偶然、同じ船に乗り合わせました。",
-                    "しかし航海の途中、激しい嵐に遭遇してしまいました。",
-                    "船が転覆しそうになると、敵同士だった両国の人々は協力して嵐を乗り越えたのです。"
-                ],
-                meaning: "仲の悪い者同士や敵味方が、たまたま同じ場所に居合わせたり、共通の困難に対して協力し合ったりすること。",
-                usage: "危機に際して呉越同舟の状況となった。",
-                choices: ["呉越同舟", "水魚の交わり", "管鮑の交わり", "刎頸の友"]
-            },
-            {
-                id: 7,
-                idiom: "四面楚歌",
-                reading: "しめんそか",
-                story: [
-                    "紀元前202年、項羽の軍は劉邦の軍に垓下という場所で包囲されました。",
-                    "項羽軍は兵糧も尽き、絶体絶命の危機に陥っていました。",
-                    "ある夜、項羽は周囲から楚の歌が聞こえてくることに気づきました。",
-                    "それは敵の劉邦軍が楚の兵士を懐柔するために歌わせていた歌でした。",
-                    "項羽は「劉邦はすでに楚を手に入れたのか。なんと楚の人間が多いことか」と嘆き、敗北を悟りました。"
-                ],
-                meaning: "四方がすべて敵であること。孤立して助けのないこと。",
-                usage: "会議で四面楚歌の状態に陥った。",
-                choices: ["四面楚歌", "背水の陣", "万事休す", "塗炭の苦しみ"]
-            },
-            {
-                id: 8,
-                idiom: "背水の陣",
-                reading: "はいすいのじん",
-                story: [
-                    "紀元前204年、漢の韓信将軍は趙の大軍と戦うことになりました。",
-                    "韓信の軍は趙軍の10分の1ほどの兵力しかありませんでした。",
-                    "韓信は川を背にして陣を敷きました。これは兵法の常識に反する配置でした。",
-                    "部下たちは驚きましたが、韓信には考えがありました。",
-                    "退路を断たれた兵士たちは必死に戦い、見事に趙の大軍を破ったのです。「退けば川に落ちて死ぬ」という覚悟が勝利を呼んだのでした。"
-                ],
-                meaning: "絶対に退却しない決死の覚悟で敵に対する態勢。失敗したら再起できない覚悟で物事を始めること。",
-                usage: "背水の陣で臨む。",
-                choices: ["背水の陣", "四面楚歌", "虎穴に入らずんば虎児を得ず", "万事休す"]
-            },
-            {
-                id: 9,
-                idiom: "漁夫の利",
-                reading: "ぎょふのり",
-                story: [
-                    "川辺で、シギという鳥がハマグリを捕まえようとしていました。",
-                    "ハマグリは殻を閉じてシギのくちばしを挟んでしまいました。",
-                    "シギは「今日も明日も雨が降らなければ、お前は干からびて死ぬぞ」と言いました。",
-                    "ハマグリは「今日も明日もくちばしが抜けなければ、お前は餓死するぞ」と言い返しました。",
-                    "両者が争っていると、通りかかった漁師が両方とも捕まえてしまいました。"
-                ],
-                meaning: "両者が利益を争っている間に、第三者が利益を横取りしてしまうこと。",
-                usage: "両社の争いで漁夫の利を得た。",
-                choices: ["漁夫の利", "五十歩百歩", "他山の石", "塞翁が馬"]
-            },
-            {
-                id: 10,
-                idiom: "朝三暮四",
-                reading: "ちょうさんぼし",
-                story: [
-                    "中国の宋という国に、猿をたくさん飼っている狙公という男がいました。",
-                    "ある年、食料が不足してきたので、猿に与えるトチの実を減らすことにしました。",
-                    "狙公は猿たちに「朝に3つ、夕方に4つやる」と言いました。",
-                    "すると猿たちは「少ない！」と怒り出しました。",
-                    "そこで狙公は「では、朝に4つ、夕方に3つやろう」と言うと、猿たちは大喜びしました。合計は同じ7つなのに。"
-                ],
-                meaning: "結果は同じなのに、目先の違いだけにとらわれる愚かさをいう。また、言葉巧みに相手をあざむき、相手をだますこと。",
-                usage: "その提案は朝三暮四だ。",
-                choices: ["朝三暮四", "五十歩百歩", "杞憂", "他山の石"]
-            },
-            {
-                id: 11,
-                idiom: "木に縁りて魚を求む",
-                reading: "きによりてうおをもとむ",
-                story: [
-                    "中国の戦国時代、斉の宣王は強い野心を持っていました。",
-                    "宣王は武力で天下を統一し、中国の覇者になりたいと考えていました。",
-                    "孟子は宣王と面会した際、王の野心を見抜きました。",
-                    "孟子は王に言いました。「戦争によって覇者になろうとするのは、木に登って魚を捕まえようとするようなものです」",
-                    "「方法が間違っていれば、目的を達することはできません。仁政こそが王道なのです」と諭しました。"
-                ],
-                meaning: "方法を間違えては、どんな物事も、とうてい手に入れられないことのたとえ。",
-                usage: "そのやり方では木に縁りて魚を求むだ。",
-                choices: ["木に縁りて魚を求む", "矛盾", "杞憂", "五十歩百歩"]
-            },
-            {
-                id: 12,
-                idiom: "玉石混淆",
-                reading: "ぎょくせきこんこう",
-                story: [
-                    "晋の時代、葛洪という学者がいました。",
-                    "当時の世の中では、真と偽が見分けられない状況が広がっていました。",
-                    "優れた書物と粗悪な書物が混ざり合い、人々はその違いを見分けられませんでした。",
-                    "葛洪は嘆きました。「近ごろは真と偽が逆になり、宝石と石ころが入り混じっている」",
-                    "「良いものと悪いものを見極める目を持つ人がいなくなってしまった」と批判しました。"
-                ],
-                meaning: "よいものと悪いものとが入り交じり、区別のつかないこと。",
-                usage: "インターネットの情報は玉石混淆だ。",
-                choices: ["玉石混淆", "完璧", "双璧", "矛盾"]
-            },
-            {
-                id: 13,
-                idiom: "蛍雪の功",
-                reading: "けいせつのこう",
-                story: [
-                    "古代中国の晋の時代、車胤と孫康という二人の貧しい青年がいました。",
-                    "二人は官吏を目指して勉学に励んでいましたが、夜に使う灯油を買うお金がありませんでした。",
-                    "車胤は夏の夜、数十匹の蛍を捕まえて絹の袋に入れ、その光で本を読みました。",
-                    "孫康は冬の夜、窓辺に雪を積み上げ、雪の反射光で勉強を続けました。",
-                    "二人のたゆまぬ努力は実を結び、ついに高級官吏にまで出世したのです。"
-                ],
-                meaning: "苦労しながらも学問をし、成功すること。",
-                usage: "蛍雪の功を積んで医師になった。",
-                choices: ["蛍雪の功", "大器晩成", "切磋琢磨", "推敲"]
-            },
-            {
-                id: 14,
-                idiom: "虎穴に入らずんば虎児を得ず",
-                reading: "こけつにいらずんばこじをえず",
-                story: [
-                    "後漢の時代、班超は36人の部下とともに西域の鄯善国に使者として派遣されました。",
-                    "しかし、敵国の匈奴も使者を送っており、その数は100人を超えていました。",
-                    "鄯善王の態度が冷たくなり、班超たちは殺される危険を感じました。",
-                    "班超は部下に言いました。「虎の巣穴に入らなければ、虎の子は手に入らない」",
-                    "その夜、班超たちは夜襲を決行し、数倍の敵を全滅させ、鄯善国を味方につけることに成功しました。"
-                ],
-                meaning: "大きな成果を得るためには危険を冒さなければならない。",
-                usage: "虎穴に入らずんば虎児を得ずと覚悟を決めた。",
-                choices: ["虎穴に入らずんば虎児を得ず", "背水の陣", "四面楚歌", "万事休す"]
-            },
-            {
-                id: 15,
-                idiom: "五十歩百歩",
-                reading: "ごじゅっぽひゃっぽ",
-                story: [
-                    "梁の恵王が孟子に尋ねました。「私は民のために善政を尽くしているのに、なぜ民は増えないのでしょう」",
-                    "孟子は例え話をしました。「戦場で逃げる兵士がいたとします」",
-                    "「ある兵士は百歩逃げて止まり、別の兵士は五十歩逃げて止まりました」",
-                    "「五十歩逃げた兵士が、百歩逃げた兵士を臆病者だと笑いました」",
-                    "孟子は言いました。「五十歩も百歩も、逃げたことに変わりはありません。王の政治も他国と本質的には同じなのです」"
-                ],
-                meaning: "違いはあることはあるが、本質的には変わりがないということ。",
-                usage: "彼の案も君の案も五十歩百歩だ。",
-                choices: ["五十歩百歩", "朝三暮四", "矛盾", "木に縁りて魚を求む"]
-            },
-            {
-                id: 16,
-                idiom: "水魚の交わり",
-                reading: "すいぎょのまじわり",
-                story: [
-                    "三国時代、劉備は諸葛亮を三顧の礼で迎えました。",
-                    "劉備は諸葛亮を深く信頼し、二人は常に語り合うようになりました。",
-                    "古参の武将である関羽と張飛は、諸葛亮への劉備の厚遇に不満を感じていました。",
-                    "劉備は二人に言いました。「私が孔明を得たのは、魚が水を得たようなものだ」",
-                    "「魚は水がなければ生きていけない。私にとって孔明は、それほど欠かせない存在なのだ」"
-                ],
-                meaning: "特に親密で離れがたい交わりのこと。",
-                usage: "二人は水魚の交わりで結ばれている。",
-                choices: ["水魚の交わり", "呉越同舟", "管鮑の交わり", "刎頸の友"]
-            },
-            {
-                id: 17,
-                idiom: "大器晩成",
-                reading: "たいきばんせい",
-                story: [
-                    "老子という哲学者が、人の成長について語りました。",
-                    "「大きな四角は隅がなく見え、大きな器は完成するのに時間がかかる」",
-                    "立派な鐘や鼎のような大きな器を作るには、長い年月が必要です。",
-                    "人も同じように、本当に優れた人物は若いうちは目立たないものです。",
-                    "しかし時間をかけてじっくりと成長し、やがて大きな才能を発揮するのです。"
-                ],
-                meaning: "大人物は、すぐにはできあがらず、はじめは役に立たない者のように見えるが、人よりおくれて、その才能をあらわすということのたとえ。",
-                usage: "彼は大器晩成型の人物だ。",
-                choices: ["大器晩成", "蛍雪の功", "切磋琢磨", "出藍の誉れ"]
-            },
-            {
-                id: 18,
-                idiom: "他山の石",
-                reading: "たざんのいし",
-                story: [
-                    "古代中国の『詩経』にこう書かれています。",
-                    "「他の山から出た、つまらない石であっても、玉を磨くのに使うことができる」",
-                    "質の悪い石でも、磨き石として役立つという意味です。",
-                    "これは人の行いにも当てはまります。",
-                    "他人の誤った言動や失敗も、自分を磨く材料として活用できるのです。"
-                ],
-                meaning: "自分の向上に役立てることができる他人の言動。",
-                usage: "彼の失敗を他山の石として学ぼう。",
-                choices: ["他山の石", "五十歩百歩", "杞憂", "矛盾"]
-            },
-            {
-                id: 19,
-                idiom: "知己",
-                reading: "ちき",
-                story: [
-                    "春秋時代、伯牙という琴の名手がいました。",
-                    "伯牙の奏でる琴の音を真に理解できる人はいませんでした。",
-                    "ある日、樵夫の鍾子期という男が伯牙の演奏を聴きました。",
-                    "鍾子期は伯牙の心の内を完全に理解し、音楽の真髄を語ることができました。",
-                    "伯牙は鍾子期を知己として深く信頼しましたが、鍾子期の死後、二度と琴を弾くことはありませんでした。"
-                ],
-                meaning: "自分の心や、真価をよく理解してくれる人。親友。知人。",
-                usage: "彼は私の知己だ。",
-                choices: ["知己", "水魚の交わり", "刎頸の友", "管鮑の交わり"]
-            },
-            {
-                id: 20,
-                idiom: "万事休す",
-                reading: "ばんじきゅうす",
-                story: [
-                    "戦国時代のある戦いで、ある将軍の軍は敵に完全に包囲されてしまいました。",
-                    "兵糧は尽き、援軍の見込みもありません。",
-                    "脱出の道も断たれ、戦う力も残っていませんでした。",
-                    "将軍は深いため息をつき、「もはや万事休すだ」と呟きました。",
-                    "すべてが終わり、もうどうすることもできない状況になってしまったのです。"
-                ],
-                meaning: "すべてがどうにもならなくなってしまうこと。",
-                usage: "資金が底をつき、万事休すだ。",
-                choices: ["万事休す", "四面楚歌", "背水の陣", "虎穴に入らずんば虎児を得ず"]
-            }
-                
-,
                 idiom: "矛盾",
                 reading: "むじゅん",
                 story: [
@@ -590,166 +430,235 @@
                 meaning: "話の前後が合わず、つじつまが合わないこと",
                 usage: "彼の説明は矛盾だらけで信用できない",
                 choices: ["矛盾", "誇張", "欺瞞", "虚構"]
+            },
+            {
+                id: 2,
+                idiom: "杞憂",
+                reading: "きゆう",
+                story: [
+                    "昔、杞という国に住む人がいました。",
+                    "その人は「天が落ちてきたらどうしよう」と心配し始めました。",
+                    "「地が崩れたらどうしよう」とも思い、夜も眠れなくなりました。",
+                    "友人が「天は気体の集まりだから落ちてこない。地も土の塊だから崩れない」と説明しました。",
+                    "しかし、その人は「では、気体が散ってしまったら？土が沈んでしまったら？」とまた心配し続けました。"
+                ],
+                meaning: "心配する必要のないことを心配すること。取り越し苦労",
+                usage: "試験の結果を心配しすぎるのは杞憂というものだ",
+                choices: ["杞憂", "危惧", "懸念", "不安"]
+            },
+            {
+                id: 3,
+                idiom: "画竜点睛",
+                reading: "がりょうてんせい",
+                story: [
+                    "中国南北朝時代、張僧繇という名高い画家がいました。",
+                    "彼は寺院の壁に四匹の竜の絵を描きました。",
+                    "しかし、どの竜にも瞳（ひとみ）を描きませんでした。",
+                    "人々が「なぜ瞳を描かないのか」と尋ねると、彼は「瞳を描くと竜が飛び去ってしまう」と答えました。",
+                    "人々が無理に頼んだので、二匹の竜に瞳を描き入れると、その二匹は天に昇って飛び去ってしまいました。"
+                ],
+                meaning: "最後の仕上げを加えて作品を完成させること。物事の最も重要な部分",
+                usage: "この企画は画竜点睛を欠いている",
+                choices: ["画竜点睛", "完璧無欠", "仕上之功", "極致到達"]
+            },
+            {
+                id: 4,
+                idiom: "呉越同舟",
+                reading: "ごえつどうしゅう",
+                story: [
+                    "呉と越は、昔から仲の悪い隣国同士でした。",
+                    "ある日、呉の人と越の人が同じ舟に乗り合わせました。",
+                    "最初は互いに警戒し、敵対していました。",
+                    "ところが、突然激しい嵐に襲われ、舟が転覆しそうになりました。",
+                    "命の危機に直面すると、二人は協力して舟を守り、互いに助け合いました。"
+                ],
+                meaning: "敵同士や仲の悪い者同士が、同じ場所や状況に置かれること。また、危機に際して協力すること",
+                usage: "競合企業との共同プロジェクトは、まさに呉越同舟の状況だ",
+                choices: ["呉越同舟", "和解協力", "一時休戦", "共同戦線"]
+            },
+            {
+                id: 5,
+                idiom: "五十歩百歩",
+                reading: "ごじっぽひゃっぽ",
+                story: [
+                    "孟子が梁の恵王に説きました。",
+                    "「戦場で、五十歩逃げた兵士が、百歩逃げた兵士を臆病者だと笑いました。」",
+                    "「しかし、五十歩逃げるのも百歩逃げるのも、逃げたことに変わりはありません。」",
+                    "「王の政治と他国の政治を比べても同じです。」",
+                    "「少し良いからといって、本質的には何も変わっていないのです。」"
+                ],
+                meaning: "程度の差はあっても、本質的には同じであること。大差ないこと",
+                usage: "テストで60点も50点も五十歩百歩だ",
+                choices: ["五十歩百歩", "大同小異", "似而非物", "同類相憐"]
             }
         ];
 
-        let state = {
-            currentIndex: 0,
-            storyStep: 0,
-            score: 0,
-            answeredCount: 0
-        };
+        let currentIndex = 0;
+        let storyStep = 0;
+        let showQuiz = false;
+        let selectedAnswer = null;
+        let showResult = false;
+        let score = 0;
+        let answeredCount = 0;
 
-        // 初期化
-        function init() {
-            lucide.createIcons();
-            renderQuestion();
+        function updateProgress() {
+            document.getElementById('currentNum').textContent = currentIndex + 1;
+            document.getElementById('totalNum').textContent = SAMPLE_KOJISEIGO.length;
+            document.getElementById('score').textContent = score;
+            document.getElementById('answered').textContent = answeredCount;
         }
 
-        function renderQuestion() {
-            const current = SAMPLE_KOJISEIGO[state.currentIndex];
-            
-            // UI更新
-            document.getElementById('current-num').textContent = state.currentIndex + 1;
-            document.getElementById('total-num').textContent = SAMPLE_KOJISEIGO.length;
-            document.getElementById('score-display').textContent = `正解: ${state.score} / ${state.answeredCount}`;
-
-            // ストーリーリセット
-            state.storyStep = 0;
-            showStoryStep();
-
-            // セクション表示切り替え
-            document.getElementById('story-section').classList.remove('hidden');
-            document.getElementById('quiz-section').classList.add('hidden');
-            document.getElementById('result-section').classList.add('hidden');
-        }
-
-        function showStoryStep() {
-            const current = SAMPLE_KOJISEIGO[state.currentIndex];
-            const content = document.getElementById('story-content');
-            
-            // アニメーション用リセット
-            content.classList.remove('active');
-            
-            setTimeout(() => {
-                content.textContent = current.story[state.storyStep];
-                content.classList.add('active');
-            }, 50);
-
-            // インジケーター作成
-            const indicators = document.getElementById('step-indicators');
-            indicators.innerHTML = '';
-            current.story.forEach((_, i) => {
-                const dot = document.createElement('div');
-                dot.className = 'dot';
-                dot.style.width = i === state.storyStep ? '32px' : '12px';
-                dot.style.background = i <= state.storyStep 
-                    ? 'linear-gradient(90deg, #d4af37, #f4e4c1)' 
-                    : 'rgba(212, 175, 55, 0.2)';
-                indicators.appendChild(dot);
-            });
-
-            // ボタンテキスト
-            const btn = document.getElementById('next-step-btn');
-            const btnText = btn.querySelector('span');
-            if (state.storyStep < current.story.length - 1) {
-                btnText.textContent = '続きを読む';
-            } else {
-                btnText.textContent = 'クイズに挑戦';
+        function renderStepIndicators(totalSteps, currentStep) {
+            let html = '';
+            for (let i = 0; i < totalSteps; i++) {
+                let className = 'step-dot ';
+                if (i === currentStep) className += 'active';
+                else if (i < currentStep) className += 'completed';
+                else className += 'upcoming';
+                html += `<div class="${className}"></div>`;
             }
+            return html;
         }
 
-        // 続きを読む / クイズへ ボタン
-        document.getElementById('next-step-btn').addEventListener('click', () => {
-            const current = SAMPLE_KOJISEIGO[state.currentIndex];
-            if (state.storyStep < current.story.length - 1) {
-                state.storyStep++;
-                showStoryStep();
+        function renderStory() {
+            const current = SAMPLE_KOJISEIGO[currentIndex];
+            const isLastStep = storyStep === current.story.length - 1;
+            
+            const html = `
+                <div class="story-text">${current.story[storyStep]}</div>
+                <div class="step-indicators">
+                    ${renderStepIndicators(current.story.length, storyStep)}
+                </div>
+                <button class="btn-primary" onclick="handleNext()">
+                    ${isLastStep ? 'クイズに挑戦' : '続きを読む'} ›
+                </button>
+            `;
+            
+            document.getElementById('mainCard').innerHTML = html;
+        }
+
+        function renderQuiz() {
+            const current = SAMPLE_KOJISEIGO[currentIndex];
+            
+            const choicesHtml = current.choices.map(choice => 
+                `<button class="choice-btn" onclick="handleAnswer('${choice}')">${choice}</button>`
+            ).join('');
+            
+            const html = `
+                <h2 class="quiz-title">この物語の故事成語は？</h2>
+                <div class="choices">${choicesHtml}</div>
+            `;
+            
+            document.getElementById('mainCard').innerHTML = html;
+        }
+
+        function renderResult() {
+            const current = SAMPLE_KOJISEIGO[currentIndex];
+            const isCorrect = selectedAnswer === current.idiom;
+            const isFinished = currentIndex === SAMPLE_KOJISEIGO.length - 1;
+            
+            const icon = isCorrect ? '✓' : '✗';
+            const resultClass = isCorrect ? 'correct' : 'incorrect';
+            
+            let html = `
+                <div class="result-icon">${icon}</div>
+                <h2 class="result-title ${resultClass}">${isCorrect ? '正解！' : '不正解'}</h2>
+                <div class="idiom-info">
+                    <div class="idiom-name">${current.idiom}</div>
+                    <div class="idiom-reading">${current.reading}</div>
+                    <div class="idiom-meaning">
+                        <span class="label">意味：</span>${current.meaning}
+                    </div>
+                    <div class="idiom-usage">
+                        <span class="label">用例：</span>${current.usage}
+                    </div>
+                </div>
+            `;
+            
+            if (isFinished) {
+                html += `
+                    <div class="final-score">
+                        <h3>全問完了！</h3>
+                        <p>最終スコア: ${score} / ${SAMPLE_KOJISEIGO.length}</p>
+                        <button class="btn-primary" onclick="handleRestart()">
+                            ↻ 最初から始める
+                        </button>
+                    </div>
+                `;
             } else {
-                showQuiz();
+                html += `
+                    <button class="btn-primary" onclick="handleNextQuestion()">
+                        次の問題へ ›
+                    </button>
+                `;
             }
-        });
+            
+            document.getElementById('mainCard').innerHTML = html;
+        }
 
-        function showQuiz() {
-            document.getElementById('story-section').classList.add('hidden');
-            document.getElementById('quiz-section').classList.remove('hidden');
-
-            const current = SAMPLE_KOJISEIGO[state.currentIndex];
-            const container = document.getElementById('choices-container');
-            container.innerHTML = '';
-
-            current.choices.forEach(choice => {
-                const btn = document.createElement('button');
-                btn.className = 'choice-btn';
-                btn.textContent = choice;
-                btn.onclick = () => handleAnswer(choice);
-                container.appendChild(btn);
-            });
+        function handleNext() {
+            const current = SAMPLE_KOJISEIGO[currentIndex];
+            if (storyStep < current.story.length - 1) {
+                storyStep++;
+                renderStory();
+            } else {
+                showQuiz = true;
+                renderQuiz();
+            }
         }
 
         function handleAnswer(choice) {
-            const current = SAMPLE_KOJISEIGO[state.currentIndex];
-            const isCorrect = choice === current.idiom;
+            selectedAnswer = choice;
+            showResult = true;
+            answeredCount++;
             
-            state.answeredCount++;
-            if (isCorrect) state.score++;
-
-            // 結果表示
-            document.getElementById('quiz-section').classList.add('hidden');
-            document.getElementById('result-section').classList.remove('hidden');
-
-            const iconContainer = document.getElementById('result-icon-container');
-            const resultText = document.getElementById('result-text');
+            const current = SAMPLE_KOJISEIGO[currentIndex];
+            if (choice === current.idiom) {
+                score++;
+            }
             
-            if (isCorrect) {
-                iconContainer.innerHTML = '<i data-lucide="check-circle" color="#4ade80" size="64"></i>';
-                resultText.textContent = '正解！';
-                resultText.style.color = '#4ade80';
-            } else {
-                iconContainer.innerHTML = '<i data-lucide="x-circle" color="#f87171" size="64"></i>';
-                resultText.textContent = '不正解';
-                resultText.style.color = '#f87171';
-            }
-
-            document.getElementById('result-idiom').textContent = current.idiom;
-            document.getElementById('result-reading').textContent = current.reading;
-            document.getElementById('result-meaning').innerHTML = `<strong style="color: var(--gold)">意味：</strong>${current.meaning}`;
-            document.getElementById('result-usage').innerHTML = `<strong style="color: var(--gold)">用例：</strong>${current.usage}`;
-
-            // 全問終了チェック
-            const isFinished = state.currentIndex === SAMPLE_KOJISEIGO.length - 1;
-            const nextBtn = document.getElementById('next-question-btn');
-            const finalStats = document.getElementById('final-stats');
-
-            if (isFinished) {
-                nextBtn.classList.add('hidden');
-                finalStats.classList.remove('hidden');
-                document.getElementById('final-score-text').textContent = `最終スコア: ${state.score} / ${SAMPLE_KOJISEIGO.length}`;
-            } else {
-                nextBtn.classList.remove('hidden');
-                finalStats.classList.add('hidden');
-            }
-
-            lucide.createIcons();
-            document.getElementById('score-display').textContent = `正解: ${state.score} / ${state.answeredCount}`;
+            // ボタンに正解/不正解のクラスを追加
+            const buttons = document.querySelectorAll('.choice-btn');
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                if (btn.textContent === current.idiom) {
+                    btn.classList.add('correct');
+                } else if (btn.textContent === choice) {
+                    btn.classList.add('incorrect');
+                }
+            });
+            
+            setTimeout(() => {
+                updateProgress();
+                renderResult();
+            }, 1000);
         }
 
-        document.getElementById('next-question-btn').onclick = () => {
-            state.currentIndex++;
-            renderQuestion();
-        };
-
-        function restartGame() {
-            state = {
-                currentIndex: 0,
-                storyStep: 0,
-                score: 0,
-                answeredCount: 0
-            };
-            renderQuestion();
+        function handleNextQuestion() {
+            currentIndex++;
+            storyStep = 0;
+            showQuiz = false;
+            selectedAnswer = null;
+            showResult = false;
+            updateProgress();
+            renderStory();
         }
 
-        window.onload = init;
+        function handleRestart() {
+            currentIndex = 0;
+            storyStep = 0;
+            showQuiz = false;
+            selectedAnswer = null;
+            showResult = false;
+            score = 0;
+            answeredCount = 0;
+            updateProgress();
+            renderStory();
+        }
+
+        // 初期化
+        updateProgress();
+        renderStory();
     </script>
 </body>
 </html>
