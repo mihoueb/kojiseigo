@@ -409,7 +409,6 @@
   ],
   meaning: "意味の説明",
   usage: "用例",
-  choices: ["選択肢1", "選択肢2", "選択肢3", "選択肢4"]
 }</pre>
         </div>
     </div>
@@ -548,10 +547,13 @@
             document.getElementById('mainCard').innerHTML = html;
         }
 
-        function renderQuiz() {
+function renderQuiz() {
             const current = SAMPLE_KOJISEIGO[currentIndex];
             
-            const choicesHtml = current.choices.map(choice => 
+            // 全データ（SAMPLE_KOJISEIGO）から、正解以外の選択肢をランダムに3つ選んでシャッフル
+            const currentChoices = generateRandomChoices(current.idiom, SAMPLE_KOJISEIGO);
+            
+            const choicesHtml = currentChoices.map(choice => 
                 `<button class="choice-btn" onclick="handleAnswer('${choice}')">${choice}</button>`
             ).join('');
             
