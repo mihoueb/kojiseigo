@@ -1,675 +1,675 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>故事成語の旅</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>故事成語の旅</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        body {
-            font-family: 'Noto Serif JP', 'Yu Mincho', 'YuMincho', serif;
-            background: linear-gradient(135deg, #1a1410 0%, #2d1810 50%, #1a1410 100%);
-            min-height: 100vh;
-            padding: 2rem;
-            color: #f4e4c1;
-            position: relative;
-            overflow-x: hidden;
-        }
+        body {
+            font-family: 'Noto Serif JP', 'Yu Mincho', 'YuMincho', serif;
+            background: linear-gradient(135deg, #1a1410 0%, #2d1810 50%, #1a1410 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: #f4e4c1;
+            position: relative;
+            overflow-x: hidden;
+        }
 
-        /* 背景装飾 */
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: 
-                radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(139, 69, 19, 0.03) 0%, transparent 50%);
-            pointer-events: none;
-        }
+        /* 背景装飾 */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(139, 69, 19, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+        }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
 
-        /* ヘッダー */
-        header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
+        /* ヘッダー */
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
 
-        h1 {
-            font-size: 3rem;
-            font-weight: 500;
-            background: linear-gradient(135deg, #d4af37 0%, #f4e4c1 50%, #d4af37 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-            letter-spacing: 0.1em;
-        }
+        h1 {
+            font-size: 3rem;
+            font-weight: 500;
+            background: linear-gradient(135deg, #d4af37 0%, #f4e4c1 50%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.1em;
+        }
 
-        .subtitle {
-            color: rgba(244, 228, 193, 0.7);
-            font-size: 1rem;
-            letter-spacing: 0.2em;
-        }
+        .subtitle {
+            color: rgba(244, 228, 193, 0.7);
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+        }
 
-        /* 進捗バー */
-        .progress-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 1.5rem;
-            background: rgba(139, 69, 19, 0.2);
-            border-radius: 12px;
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            margin-bottom: 2rem;
-        }
+        /* 進捗バー */
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: rgba(139, 69, 19, 0.2);
+            border-radius: 12px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            margin-bottom: 2rem;
+        }
 
-        .progress-info {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #f4e4c1;
-            font-size: 0.95rem;
-        }
+        .progress-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #f4e4c1;
+            font-size: 0.95rem;
+        }
 
-        .score-info {
-            color: #d4af37;
-            font-size: 0.95rem;
-            font-weight: 600;
-        }
+        .score-info {
+            color: #d4af37;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
 
-        /* メインカード */
-        .main-card {
-            background: linear-gradient(135deg, rgba(46, 28, 16, 0.9) 0%, rgba(26, 20, 16, 0.9) 100%);
-            border-radius: 20px;
-            padding: 3rem;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(212, 175, 55, 0.1);
-            border: 2px solid rgba(212, 175, 55, 0.2);
-            min-height: 400px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+        /* メインカード */
+        .main-card {
+            background: linear-gradient(135deg, rgba(46, 28, 16, 0.9) 0%, rgba(26, 20, 16, 0.9) 100%);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(212, 175, 55, 0.1);
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
 
-        /* ストーリー表示 */
-        .story-text {
-            font-size: 1.4rem;
-            line-height: 2.2;
-            color: #f4e4c1;
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            background: rgba(212, 175, 55, 0.05);
-            border-radius: 12px;
-            border-left: 4px solid #d4af37;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
+        /* ストーリー表示 */
+        .story-text {
+            font-size: 1.4rem;
+            line-height: 2.2;
+            color: #f4e4c1;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(212, 175, 55, 0.05);
+            border-radius: 12px;
+            border-left: 4px solid #d4af37;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
 
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-        /* ステップインジケーター */
-        .step-indicators {
-            display: flex;
-            gap: 0.5rem;
-            justify-content: center;
-            margin-bottom: 2rem;
-        }
+        /* ステップインジケーター */
+        .step-indicators {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
 
-        .step-dot {
-            height: 12px;
-            border-radius: 6px;
-            background: rgba(212, 175, 55, 0.2);
-            transition: all 0.4s ease;
-        }
+        .step-dot {
+            height: 12px;
+            border-radius: 6px;
+            background: rgba(212, 175, 55, 0.2);
+            transition: all 0.4s ease;
+        }
 
-        .step-dot.active {
-            width: 32px;
-            background: linear-gradient(90deg, #d4af37, #f4e4c1);
-        }
+        .step-dot.active {
+            width: 32px;
+            background: linear-gradient(90deg, #d4af37, #f4e4c1);
+        }
 
-        .step-dot.completed {
-            width: 12px;
-            background: linear-gradient(90deg, #d4af37, #f4e4c1);
-        }
+        .step-dot.completed {
+            width: 12px;
+            background: linear-gradient(90deg, #d4af37, #f4e4c1);
+        }
 
-        .step-dot.upcoming {
-            width: 12px;
-        }
+        .step-dot.upcoming {
+            width: 12px;
+        }
 
-        /* ボタン */
-        .btn-primary {
-            background: linear-gradient(135deg, #d4af37 0%, #c9a961 100%);
-            color: #1a1410;
-            border: none;
-            border-radius: 12px;
-            padding: 1rem 2.5rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin: 0 auto;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
-            transition: all 0.3s ease;
-            font-family: inherit;
-        }
+        /* ボタン */
+        .btn-primary {
+            background: linear-gradient(135deg, #d4af37 0%, #c9a961 100%);
+            color: #1a1410;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0 auto;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
-        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
 
-        /* クイズ */
-        .quiz-title {
-            font-size: 1.8rem;
-            color: #d4af37;
-            text-align: center;
-            margin-bottom: 2.5rem;
-            font-weight: 500;
-            letter-spacing: 0.1em;
-        }
+        /* クイズ */
+        .quiz-title {
+            font-size: 1.8rem;
+            color: #d4af37;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+        }
 
-        .choices {
-            display: grid;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
+        .choices {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
 
-        .choice-btn {
-            background: rgba(212, 175, 55, 0.1);
-            border: 2px solid rgba(212, 175, 55, 0.3);
-            border-radius: 12px;
-            padding: 1.5rem;
-            font-size: 1.3rem;
-            color: #f4e4c1;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: left;
-            font-family: inherit;
-            font-weight: 500;
-        }
+        .choice-btn {
+            background: rgba(212, 175, 55, 0.1);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            font-size: 1.3rem;
+            color: #f4e4c1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-family: inherit;
+            font-weight: 500;
+        }
 
-        .choice-btn:hover:not(:disabled) {
-            background: rgba(212, 175, 55, 0.2);
-            border-color: #d4af37;
-            transform: translateX(8px);
-        }
+        .choice-btn:hover:not(:disabled) {
+            background: rgba(212, 175, 55, 0.2);
+            border-color: #d4af37;
+            transform: translateX(8px);
+        }
 
-        .choice-btn.correct {
-            background: rgba(74, 222, 128, 0.2);
-            border-color: #4ade80;
-        }
+        .choice-btn.correct {
+            background: rgba(74, 222, 128, 0.2);
+            border-color: #4ade80;
+        }
 
-        .choice-btn.incorrect {
-            background: rgba(248, 113, 113, 0.2);
-            border-color: #f87171;
-        }
+        .choice-btn.incorrect {
+            background: rgba(248, 113, 113, 0.2);
+            border-color: #f87171;
+        }
 
-        .choice-btn:disabled {
-            cursor: not-allowed;
-        }
+        .choice-btn:disabled {
+            cursor: not-allowed;
+        }
 
-        /* 結果表示 */
-        .result-icon {
-            text-align: center;
-            margin-bottom: 1rem;
-            font-size: 4rem;
-        }
+        /* 結果表示 */
+        .result-icon {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 4rem;
+        }
 
-        .result-title {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            font-weight: 500;
-        }
+        .result-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
 
-        .result-title.correct {
-            color: #4ade80;
-        }
+        .result-title.correct {
+            color: #4ade80;
+        }
 
-        .result-title.incorrect {
-            color: #f87171;
-        }
+        .result-title.incorrect {
+            color: #f87171;
+        }
 
-        .idiom-info {
-            background: rgba(212, 175, 55, 0.1);
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            border: 1px solid rgba(212, 175, 55, 0.2);
-        }
+        .idiom-info {
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
 
-        .idiom-name {
-            font-size: 2.5rem;
-            color: #d4af37;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            text-align: center;
-        }
+        .idiom-name {
+            font-size: 2.5rem;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            text-align: center;
+        }
 
-        .idiom-reading {
-            font-size: 1.2rem;
-            color: rgba(244, 228, 193, 0.7);
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
+        .idiom-reading {
+            font-size: 1.2rem;
+            color: rgba(244, 228, 193, 0.7);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
 
-        .idiom-meaning, .idiom-usage {
-            font-size: 1.1rem;
-            color: #f4e4c1;
-            line-height: 1.8;
-            margin-bottom: 1rem;
-        }
+        .idiom-meaning, .idiom-usage {
+            font-size: 1.1rem;
+            color: #f4e4c1;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
 
-        .idiom-usage {
-            font-size: 1rem;
-            color: rgba(244, 228, 193, 0.8);
-            padding-left: 1rem;
-            border-left: 3px solid rgba(212, 175, 55, 0.3);
-        }
+        .idiom-usage {
+            font-size: 1rem;
+            color: rgba(244, 228, 193, 0.8);
+            padding-left: 1rem;
+            border-left: 3px solid rgba(212, 175, 55, 0.3);
+        }
 
-        .label {
-            color: #d4af37;
-            font-weight: bold;
-        }
+        .label {
+            color: #d4af37;
+            font-weight: bold;
+        }
 
-        /* 最終結果 */
-        .final-score {
-            text-align: center;
-            background: rgba(212, 175, 55, 0.15);
-            padding: 2rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-        }
+        /* 最終結果 */
+        .final-score {
+            text-align: center;
+            background: rgba(212, 175, 55, 0.15);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
 
-        .final-score h3 {
-            font-size: 1.8rem;
-            color: #d4af37;
-            margin-bottom: 1rem;
-            font-weight: 500;
-        }
+        .final-score h3 {
+            font-size: 1.8rem;
+            color: #d4af37;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
 
-        .final-score p {
-            font-size: 1.5rem;
-            color: #f4e4c1;
-            margin-bottom: 1.5rem;
-        }
+        .final-score p {
+            font-size: 1.5rem;
+            color: #f4e4c1;
+            margin-bottom: 1.5rem;
+        }
 
-        /* データ構造説明 */
-        .data-structure {
-            margin-top: 3rem;
-            padding: 2rem;
-            background: rgba(46, 28, 16, 0.5);
-            border-radius: 12px;
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            color: #f4e4c1;
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
+        /* データ構造説明 */
+        .data-structure {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: rgba(46, 28, 16, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            color: #f4e4c1;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
 
-        .data-structure h3 {
-            color: #d4af37;
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-        }
+        .data-structure h3 {
+            color: #d4af37;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
 
-        .data-structure pre {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 1rem;
-            border-radius: 8px;
-            overflow: auto;
-            font-size: 0.85rem;
-            color: #d4af37;
-        }
+        .data-structure pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow: auto;
+            font-size: 0.85rem;
+            color: #d4af37;
+        }
 
-        .hidden {
-            display: none;
-        }
+        .hidden {
+            display: none;
+        }
 
-        /* アイコン代替 */
-        .icon {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            vertical-align: middle;
-        }
+        /* アイコン代替 */
+        .icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+        }
 
-        @media (max-width: 768px) {
-            body {
-                padding: 1rem;
-            }
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
 
-            h1 {
-                font-size: 2rem;
-            }
+            h1 {
+                font-size: 2rem;
+            }
 
-            .main-card {
-                padding: 2rem 1.5rem;
-            }
+            .main-card {
+                padding: 2rem 1.5rem;
+            }
 
-            .story-text {
-                font-size: 1.2rem;
-            }
-        }
-    </style>
+            .story-text {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <!-- ヘッダー -->
-        <header>
-            <h1>故事成語の旅</h1>
-            <p class="subtitle">物語から学ぶ、古の知恵</p>
-        </header>
+    <div class="container">
+        <!-- ヘッダー -->
+        <header>
+            <h1>故事成語の旅</h1>
+            <p class="subtitle">物語から学ぶ、古の知恵</p>
+        </header>
 
-        <!-- 進捗バー -->
-        <div class="progress-bar">
-            <div class="progress-info">
-                <span>📖</span>
-                <span>問題 <span id="currentNum">1</span> / <span id="totalNum">5</span></span>
-            </div>
-            <div class="score-info">
-                正解: <span id="score">0</span> / <span id="answered">0</span>
-            </div>
-        </div>
+        <!-- 進捗バー -->
+        <div class="progress-bar">
+            <div class="progress-info">
+                <span>📖</span>
+                <span>問題 <span id="currentNum">1</span> / <span id="totalNum">5</span></span>
+            </div>
+            <div class="score-info">
+                正解: <span id="score">0</span> / <span id="answered">0</span>
+            </div>
+        </div>
 
-        <!-- メインカード -->
-        <div class="main-card" id="mainCard"></div>
+        <!-- メインカード -->
+        <div class="main-card" id="mainCard"></div>
 
-        <!-- データ構造説明 -->
-        <div class="data-structure">
-            <h3>データ構造（65個の故事成語を追加できます）</h3>
-            <pre>{
-  id: 番号,
-  idiom: "故事成語",
-  reading: "よみがな",
-  story: [
-    "ストーリーの第1段階",
-    "ストーリーの第2段階",
-    "ストーリーの第3段階",
-    ...
-  ],
-  meaning: "意味の説明",
-  usage: "用例",
-  choices: ["選択肢1", "選択肢2", "選択肢3", "選択肢4"]
+        <!-- データ構造説明 -->
+        <div class="data-structure">
+            <h3>データ構造（65個の故事成語を追加できます）</h3>
+            <pre>{
+  id: 番号,
+  idiom: "故事成語",
+  reading: "よみがな",
+  story: [
+    "ストーリーの第1段階",
+    "ストーリーの第2段階",
+    "ストーリーの第3段階",
+    ...
+  ],
+  meaning: "意味の説明",
+  usage: "用例",
+  choices: ["選択肢1", "選択肢2", "選択肢3", "選択肢4"]
 }</pre>
-        </div>
-    </div>
+        </div>
+    </div>
 
-    <script>
-        const SAMPLE_KOJISEIGO = [
-            {
-                id: 1,
-                idiom: "矛盾",
-                reading: "むじゅん",
-                story: [
-                    "昔、中国の楚の国に武器を売る商人がいました。",
-                    "商人は矛（ほこ）を掲げて「この矛はどんな盾も突き通すことができる！」と叫びました。",
-                    "次に盾を掲げて「この盾はどんな矛も防ぐことができる！」と叫びました。",
-                    "すると、ある人が尋ねました。「では、その矛でその盾を突いたらどうなるのですか？」",
-                    "商人は答えることができませんでした。"
-                ],
-                meaning: "話の前後が合わず、つじつまが合わないこと",
-                usage: "彼の説明は矛盾だらけで信用できない"
-            },
-            {
-                id: 2,
-                idiom: "杞憂",
-                reading: "きゆう",
-                story: [
-                    "昔、杞という国に住む人がいました。",
-                    "その人は「天が落ちてきたらどうしよう」と心配し始めました。",
-                    "「地が崩れたらどうしよう」とも思い、夜も眠れなくなりました。",
-                    "友人が「天は気体の集まりだから落ちてこない。地も土の塊だから崩れない」と説明しました。",
-                    "しかし、その人は「では、気体が散ってしまったら？土が沈んでしまったら？」とまた心配し続けました。"
-                ],
-                meaning: "心配する必要のないことを心配すること。取り越し苦労",
-                usage: "試験の結果を心配しすぎるのは杞憂というものだ"
-            },
-            {
-                id: 3,
-                idiom: "画竜点睛",
-                reading: "がりょうてんせい",
-                story: [
-                    "中国南北朝時代、張僧繇という名高い画家がいました。",
-                    "彼は寺院の壁に四匹の竜の絵を描きました。",
-                    "しかし、どの竜にも瞳（ひとみ）を描きませんでした。",
-                    "人々が「なぜ瞳を描かないのか」と尋ねると、彼は「瞳を描くと竜が飛び去ってしまう」と答えました。",
-                    "人々が無理に頼んだので、二匹の竜に瞳を描き入れると、その二匹は天に昇って飛び去ってしまいました。"
-                ],
-                meaning: "最後の仕上げを加えて作品を完成させること。物事の最も重要な部分",
-                usage: "この企画は画竜点睛を欠いている"
-            },
-            {
-                id: 4,
-                idiom: "呉越同舟",
-                reading: "ごえつどうしゅう",
-                story: [
-                    "呉と越は、昔から仲の悪い隣国同士でした。",
-                    "ある日、呉の人と越の人が同じ舟に乗り合わせました。",
-                    "最初は互いに警戒し、敵対していました。",
-                    "ところが、突然激しい嵐に襲われ、舟が転覆しそうになりました。",
-                    "命の危機に直面すると、二人は協力して舟を守り、互いに助け合いました。"
-                ],
-                meaning: "敵同士や仲の悪い者同士が、同じ場所や状況に置かれること。また、危機に際して協力すること",
-                usage: "競合企業との共同プロジェクトは、まさに呉越同舟の状況だ"
-            },
-            {
-                id: 5,
-                idiom: "五十歩百歩",
-                reading: "ごじっぽひゃっぽ",
-                story: [
-                    "孟子が梁の恵王に説きました。",
-                    "「戦場で、五十歩逃げた兵士が、百歩逃げた兵士を臆病者だと笑いました。」",
-                    "「しかし、五十歩逃げるのも百歩逃げるのも、逃げたことに変わりはありません。」",
-                    "「王の政治と他国の政治を比べても同じです。」",
-                    "「少し良いからといって、本質的には何も変わっていないのです。」"
-                ],
-                meaning: "程度の差はあっても、本質的には同じであること。大差ないこと",
-                usage: "テストで60点も50点も五十歩百歩だ"
-            }
-        ];
+    <script>
+        const SAMPLE_KOJISEIGO = [
+            {
+                id: 1,
+                idiom: "矛盾",
+                reading: "むじゅん",
+                story: [
+                    "昔、中国の楚の国に武器を売る商人がいました。",
+                    "商人は矛（ほこ）を掲げて「この矛はどんな盾も突き通すことができる！」と叫びました。",
+                    "次に盾を掲げて「この盾はどんな矛も防ぐことができる！」と叫びました。",
+                    "すると、ある人が尋ねました。「では、その矛でその盾を突いたらどうなるのですか？」",
+                    "商人は答えることができませんでした。"
+                ],
+                meaning: "話の前後が合わず、つじつまが合わないこと",
+                usage: "彼の説明は矛盾だらけで信用できない"
+            },
+            {
+                id: 2,
+                idiom: "杞憂",
+                reading: "きゆう",
+                story: [
+                    "昔、杞という国に住む人がいました。",
+                    "その人は「天が落ちてきたらどうしよう」と心配し始めました。",
+                    "「地が崩れたらどうしよう」とも思い、夜も眠れなくなりました。",
+                    "友人が「天は気体の集まりだから落ちてこない。地も土の塊だから崩れない」と説明しました。",
+                    "しかし、その人は「では、気体が散ってしまったら？土が沈んでしまったら？」とまた心配し続けました。"
+                ],
+                meaning: "心配する必要のないことを心配すること。取り越し苦労",
+                usage: "試験の結果を心配しすぎるのは杞憂というものだ"
+            },
+            {
+                id: 3,
+                idiom: "画竜点睛",
+                reading: "がりょうてんせい",
+                story: [
+                    "中国南北朝時代、張僧繇という名高い画家がいました。",
+                    "彼は寺院の壁に四匹の竜の絵を描きました。",
+                    "しかし、どの竜にも瞳（ひとみ）を描きませんでした。",
+                    "人々が「なぜ瞳を描かないのか」と尋ねると、彼は「瞳を描くと竜が飛び去ってしまう」と答えました。",
+                    "人々が無理に頼んだので、二匹の竜に瞳を描き入れると、その二匹は天に昇って飛び去ってしまいました。"
+                ],
+                meaning: "最後の仕上げを加えて作品を完成させること。物事の最も重要な部分",
+                usage: "この企画は画竜点睛を欠いている"
+            },
+            {
+                id: 4,
+                idiom: "呉越同舟",
+                reading: "ごえつどうしゅう",
+                story: [
+                    "呉と越は、昔から仲の悪い隣国同士でした。",
+                    "ある日、呉の人と越の人が同じ舟に乗り合わせました。",
+                    "最初は互いに警戒し、敵対していました。",
+                    "ところが、突然激しい嵐に襲われ、舟が転覆しそうになりました。",
+                    "命の危機に直面すると、二人は協力して舟を守り、互いに助け合いました。"
+                ],
+                meaning: "敵同士や仲の悪い者同士が、同じ場所や状況に置かれること。また、危機に際して協力すること",
+                usage: "競合企業との共同プロジェクトは、まさに呉越同舟の状況だ"
+            },
+            {
+                id: 5,
+                idiom: "五十歩百歩",
+                reading: "ごじっぽひゃっぽ",
+                story: [
+                    "孟子が梁の恵王に説きました。",
+                    "「戦場で、五十歩逃げた兵士が、百歩逃げた兵士を臆病者だと笑いました。」",
+                    "「しかし、五十歩逃げるのも百歩逃げるのも、逃げたことに変わりはありません。」",
+                    "「王の政治と他国の政治を比べても同じです。」",
+                    "「少し良いからといって、本質的には何も変わっていないのです。」"
+                ],
+                meaning: "程度の差はあっても、本質的には同じであること。大差ないこと",
+                usage: "テストで60点も50点も五十歩百歩だ"
+            }
+        ];
 
-        // ランダムな選択肢を生成する関数
-        function generateRandomChoices(correctAnswer, allIdioms) {
-            // 正解以外のすべての成語を取得
-            const otherIdioms = allIdioms
-                .filter(item => item.idiom !== correctAnswer)
-                .map(item => item.idiom);
-            
-            // ランダムに3つ選ぶ
-            const shuffled = otherIdioms.sort(() => Math.random() - 0.5);
-            const wrongChoices = shuffled.slice(0, 3);
-            
-            // 正解を含めた4つの選択肢をシャッフル
-            const allChoices = [correctAnswer, ...wrongChoices];
-            return allChoices.sort(() => Math.random() - 0.5);
-        }
+        // ランダムな選択肢を生成する関数
+        function generateRandomChoices(correctAnswer, allIdioms) {
+            // 正解以外のすべての成語を取得
+            const otherIdioms = allIdioms
+                .filter(item => item.idiom !== correctAnswer)
+                .map(item => item.idiom);
+            
+            // ランダムに3つ選ぶ
+            const shuffled = otherIdioms.sort(() => Math.random() - 0.5);
+            const wrongChoices = shuffled.slice(0, 3);
+            
+            // 正解を含めた4つの選択肢をシャッフル
+            const allChoices = [correctAnswer, ...wrongChoices];
+            return allChoices.sort(() => Math.random() - 0.5);
+        }
 
-        let currentIndex = 0;
-        let storyStep = 0;
-        let showQuiz = false;
-        let selectedAnswer = null;
-        let showResult = false;
-        let score = 0;
-        let answeredCount = 0;
+        let currentIndex = 0;
+        let storyStep = 0;
+        let showQuiz = false;
+        let selectedAnswer = null;
+        let showResult = false;
+        let score = 0;
+        let answeredCount = 0;
 
-        function updateProgress() {
-            document.getElementById('currentNum').textContent = currentIndex + 1;
-            document.getElementById('totalNum').textContent = SAMPLE_KOJISEIGO.length;
-            document.getElementById('score').textContent = score;
-            document.getElementById('answered').textContent = answeredCount;
-        }
+        function updateProgress() {
+            document.getElementById('currentNum').textContent = currentIndex + 1;
+            document.getElementById('totalNum').textContent = SAMPLE_KOJISEIGO.length;
+            document.getElementById('score').textContent = score;
+            document.getElementById('answered').textContent = answeredCount;
+        }
 
-        function renderStepIndicators(totalSteps, currentStep) {
-            let html = '';
-            for (let i = 0; i < totalSteps; i++) {
-                let className = 'step-dot ';
-                if (i === currentStep) className += 'active';
-                else if (i < currentStep) className += 'completed';
-                else className += 'upcoming';
-                html += `<div class="${className}"></div>`;
-            }
-            return html;
-        }
+        function renderStepIndicators(totalSteps, currentStep) {
+            let html = '';
+            for (let i = 0; i < totalSteps; i++) {
+                let className = 'step-dot ';
+                if (i === currentStep) className += 'active';
+                else if (i < currentStep) className += 'completed';
+                else className += 'upcoming';
+                html += `<div class="${className}"></div>`;
+            }
+            return html;
+        }
 
-        function renderStory() {
-            const current = SAMPLE_KOJISEIGO[currentIndex];
-            const isLastStep = storyStep === current.story.length - 1;
-            
-            const html = `
-                <div class="story-text">${current.story[storyStep]}</div>
-                <div class="step-indicators">
-                    ${renderStepIndicators(current.story.length, storyStep)}
-                </div>
-                <button class="btn-primary" onclick="handleNext()">
-                    ${isLastStep ? 'クイズに挑戦' : '続きを読む'} ›
-                </button>
-            `;
-            
-            document.getElementById('mainCard').innerHTML = html;
-        }
+        function renderStory() {
+            const current = SAMPLE_KOJISEIGO[currentIndex];
+            const isLastStep = storyStep === current.story.length - 1;
+            
+            const html = `
+                <div class="story-text">${current.story[storyStep]}</div>
+                <div class="step-indicators">
+                    ${renderStepIndicators(current.story.length, storyStep)}
+                </div>
+                <button class="btn-primary" onclick="handleNext()">
+                    ${isLastStep ? 'クイズに挑戦' : '続きを読む'} ›
+                </button>
+            `;
+            
+            document.getElementById('mainCard').innerHTML = html;
+        }
 
-        function renderQuiz() {
-            const current = SAMPLE_KOJISEIGO[currentIndex];
-            
-            const choicesHtml = current.choices.map(choice => 
-                `<button class="choice-btn" onclick="handleAnswer('${choice}')">${choice}</button>`
-            ).join('');
-            
-            const html = `
-                <h2 class="quiz-title">この物語の故事成語は？</h2>
-                <div class="choices">${choicesHtml}</div>
-            `;
-            
-            document.getElementById('mainCard').innerHTML = html;
-        }
+        function renderQuiz() {
+            const current = SAMPLE_KOJISEIGO[currentIndex];
+            
+            const choicesHtml = current.choices.map(choice => 
+                `<button class="choice-btn" onclick="handleAnswer('${choice}')">${choice}</button>`
+            ).join('');
+            
+            const html = `
+                <h2 class="quiz-title">この物語の故事成語は？</h2>
+                <div class="choices">${choicesHtml}</div>
+            `;
+            
+            document.getElementById('mainCard').innerHTML = html;
+        }
 
-        function renderResult() {
-            const current = SAMPLE_KOJISEIGO[currentIndex];
-            const isCorrect = selectedAnswer === current.idiom;
-            const isFinished = currentIndex === SAMPLE_KOJISEIGO.length - 1;
-            
-            const icon = isCorrect ? '✓' : '✗';
-            const resultClass = isCorrect ? 'correct' : 'incorrect';
-            
-            let html = `
-                <div class="result-icon">${icon}</div>
-                <h2 class="result-title ${resultClass}">${isCorrect ? '正解！' : '不正解'}</h2>
-                <div class="idiom-info">
-                    <div class="idiom-name">${current.idiom}</div>
-                    <div class="idiom-reading">${current.reading}</div>
-                    <div class="idiom-meaning">
-                        <span class="label">意味：</span>${current.meaning}
-                    </div>
-                    <div class="idiom-usage">
-                        <span class="label">用例：</span>${current.usage}
-                    </div>
-                </div>
-            `;
-            
-            if (isFinished) {
-                html += `
-                    <div class="final-score">
-                        <h3>全問完了！</h3>
-                        <p>最終スコア: ${score} / ${SAMPLE_KOJISEIGO.length}</p>
-                        <button class="btn-primary" onclick="handleRestart()">
-                            ↻ 最初から始める
-                        </button>
-                    </div>
-                `;
-            } else {
-                html += `
-                    <button class="btn-primary" onclick="handleNextQuestion()">
-                        次の問題へ ›
-                    </button>
-                `;
-            }
-            
-            document.getElementById('mainCard').innerHTML = html;
-        }
+        function renderResult() {
+            const current = SAMPLE_KOJISEIGO[currentIndex];
+            const isCorrect = selectedAnswer === current.idiom;
+            const isFinished = currentIndex === SAMPLE_KOJISEIGO.length - 1;
+            
+            const icon = isCorrect ? '✓' : '✗';
+            const resultClass = isCorrect ? 'correct' : 'incorrect';
+            
+            let html = `
+                <div class="result-icon">${icon}</div>
+                <h2 class="result-title ${resultClass}">${isCorrect ? '正解！' : '不正解'}</h2>
+                <div class="idiom-info">
+                    <div class="idiom-name">${current.idiom}</div>
+                    <div class="idiom-reading">${current.reading}</div>
+                    <div class="idiom-meaning">
+                        <span class="label">意味：</span>${current.meaning}
+                    </div>
+                    <div class="idiom-usage">
+                        <span class="label">用例：</span>${current.usage}
+                    </div>
+                </div>
+            `;
+            
+            if (isFinished) {
+                html += `
+                    <div class="final-score">
+                        <h3>全問完了！</h3>
+                        <p>最終スコア: ${score} / ${SAMPLE_KOJISEIGO.length}</p>
+                        <button class="btn-primary" onclick="handleRestart()">
+                            ↻ 最初から始める
+                        </button>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <button class="btn-primary" onclick="handleNextQuestion()">
+                        次の問題へ ›
+                    </button>
+                `;
+            }
+            
+            document.getElementById('mainCard').innerHTML = html;
+        }
 
-        function handleNext() {
-            const current = SAMPLE_KOJISEIGO[currentIndex];
-            if (storyStep < current.story.length - 1) {
-                storyStep++;
-                renderStory();
-            } else {
-                showQuiz = true;
-                renderQuiz();
-            }
-        }
+        function handleNext() {
+            const current = SAMPLE_KOJISEIGO[currentIndex];
+            if (storyStep < current.story.length - 1) {
+                storyStep++;
+                renderStory();
+            } else {
+                showQuiz = true;
+                renderQuiz();
+            }
+        }
 
-        function handleAnswer(choice) {
-            selectedAnswer = choice;
-            showResult = true;
-            answeredCount++;
-            
-            const current = SAMPLE_KOJISEIGO[currentIndex];
-            if (choice === current.idiom) {
-                score++;
-            }
-            
-            // ボタンに正解/不正解のクラスを追加
-            const buttons = document.querySelectorAll('.choice-btn');
-            buttons.forEach(btn => {
-                btn.disabled = true;
-                if (btn.textContent === current.idiom) {
-                    btn.classList.add('correct');
-                } else if (btn.textContent === choice) {
-                    btn.classList.add('incorrect');
-                }
-            });
-            
-            setTimeout(() => {
-                updateProgress();
-                renderResult();
-            }, 1000);
-        }
+        function handleAnswer(choice) {
+            selectedAnswer = choice;
+            showResult = true;
+            answeredCount++;
+            
+            const current = SAMPLE_KOJISEIGO[currentIndex];
+            if (choice === current.idiom) {
+                score++;
+            }
+            
+            // ボタンに正解/不正解のクラスを追加
+            const buttons = document.querySelectorAll('.choice-btn');
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                if (btn.textContent === current.idiom) {
+                    btn.classList.add('correct');
+                } else if (btn.textContent === choice) {
+                    btn.classList.add('incorrect');
+                }
+            });
+            
+            setTimeout(() => {
+                updateProgress();
+                renderResult();
+            }, 1000);
+        }
 
-        function handleNextQuestion() {
-            currentIndex++;
-            storyStep = 0;
-            showQuiz = false;
-            selectedAnswer = null;
-            showResult = false;
-            updateProgress();
-            renderStory();
-        }
+        function handleNextQuestion() {
+            currentIndex++;
+            storyStep = 0;
+            showQuiz = false;
+            selectedAnswer = null;
+            showResult = false;
+            updateProgress();
+            renderStory();
+        }
 
-        function handleRestart() {
-            currentIndex = 0;
-            storyStep = 0;
-            showQuiz = false;
-            selectedAnswer = null;
-            showResult = false;
-            score = 0;
-            answeredCount = 0;
-            updateProgress();
-            renderStory();
-        }
+        function handleRestart() {
+            currentIndex = 0;
+            storyStep = 0;
+            showQuiz = false;
+            selectedAnswer = null;
+            showResult = false;
+            score = 0;
+            answeredCount = 0;
+            updateProgress();
+            renderStory();
+        }
 
-        // 初期化
-        updateProgress();
-        renderStory();
-    </script>
+        // 初期化
+        updateProgress();
+        renderStory();
+    </script>
 </body>
 </html>
