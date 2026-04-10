@@ -522,6 +522,7 @@ function handleNext() {
         renderStory();
     }
 }
+        let currentQuizData = [];
         let currentIndex = 0;
         let storyStep = 0;
         let showQuiz = false;
@@ -532,7 +533,7 @@ function handleNext() {
 
         function updateProgress() {
             document.getElementById('currentNum').textContent = currentIndex + 1;
-            document.getElementById('totalNum').textContent = SAMPLE_KOJISEIGO.length;
+            document.getElementById('totalNum').textContent = currentQuizData.length;
             document.getElementById('score').textContent = score;
             document.getElementById('answered').textContent = answeredCount;
         }
@@ -550,7 +551,7 @@ function handleNext() {
         }
 
         function renderStory() {
-            const current = SAMPLE_KOJISEIGO[currentIndex];
+            const current = currentQuizData[currentIndex];
             const isLastStep = storyStep === current.story.length - 1;
             
             const html = `
@@ -567,7 +568,7 @@ function handleNext() {
         }
 
 function renderQuiz() {
-            const current = SAMPLE_KOJISEIGO[currentIndex];
+            const current = currentQuizData[currentIndex];
             
             // 全データ（SAMPLE_KOJISEIGO）から、正解以外の選択肢をランダムに3つ選んでシャッフル
             const currentChoices = generateRandomChoices(current.idiom, SAMPLE_KOJISEIGO);
@@ -585,9 +586,11 @@ function renderQuiz() {
         }
 
         function renderResult() {
-            const current = SAMPLE_KOJISEIGO[currentIndex];
+            const current = currentQuizData[currentIndex];
+
+
+const isFinished = currentIndex === currentQuizData.length - 1;
             const isCorrect = selectedAnswer === current.idiom;
-            const isFinished = currentIndex === SAMPLE_KOJISEIGO.length - 1;
             
             const icon = isCorrect ? '✓' : '✗';
             const resultClass = isCorrect ? 'correct' : 'incorrect';
@@ -629,7 +632,7 @@ function renderQuiz() {
         }
 
 function handleNext() {
-    const current = SAMPLE_KOJISEIGO[currentIndex];
+    const current = currentQuizData[currentIndex];
     // まだ物語の続きがある場合
     if (storyStep < current.story.length - 1) {
         storyStep++;
@@ -679,8 +682,12 @@ function handleNext() {
             renderStory();
         }
 
-        function handleRestart() {
-            shuffleArray(SAMPLE_KOJISEIGO); // ★これを追加
+function handleRestart() {
+            // 1. まず全部（25個）を混ぜる
+            shuffleArray(SAMPLE_KOJISEIGO);
+            // 2. 混ぜた中から、先頭の8個だけを抜き出して「今回の問題」にする
+            currentQuizData = SAMPLE_KOJISEIGO.slice(0, 8);
+            
             currentIndex = 0;
             storyStep = 0;
             showQuiz = false;
@@ -694,6 +701,7 @@ function handleNext() {
 
         // 初期化
 shuffleArray(SAMPLE_KOJISEIGO); 
+        currentQuizData = SAMPLE_KOJISEIGO.slice(0, 8); // 最初も8個選ぶ
         updateProgress();
         renderStory();
     </script>
