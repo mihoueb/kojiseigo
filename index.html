@@ -628,16 +628,19 @@ function renderQuiz() {
             document.getElementById('mainCard').innerHTML = html;
         }
 
-        function handleNext() {
-            const current = SAMPLE_KOJISEIGO[currentIndex];
-            if (storyStep < current.story.length - 1) {
-                storyStep++;
-                renderStory();
-            } else {
-                showQuiz = true;
-                renderQuiz();
-            }
-        }
+function handleNext() {
+    const current = SAMPLE_KOJISEIGO[currentIndex];
+    // まだ物語の続きがある場合
+    if (storyStep < current.story.length - 1) {
+        storyStep++;
+        renderStory();
+    } 
+    // 物語を読み終わって、クイズ画面へ行く場合
+    else {
+        showQuiz = true;
+        renderQuiz();
+    }
+}
 
         function handleAnswer(choice) {
             selectedAnswer = choice;
@@ -677,6 +680,7 @@ function renderQuiz() {
         }
 
         function handleRestart() {
+            shuffleArray(SAMPLE_KOJISEIGO); // ★これを追加
             currentIndex = 0;
             storyStep = 0;
             showQuiz = false;
@@ -689,6 +693,7 @@ function renderQuiz() {
         }
 
         // 初期化
+shuffleArray(SAMPLE_KOJISEIGO); 
         updateProgress();
         renderStory();
     </script>
