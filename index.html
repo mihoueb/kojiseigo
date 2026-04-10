@@ -509,6 +509,19 @@
                 [array[i], array[j]] = [array[j], array[i]];
             }
         }
+        // ボタンが押された時の処理
+function handleNext() {
+    if (isLastStep) {
+        // 「クイズに挑戦」に変わっている時だけシャッフルして開始！
+        shuffleArray(SAMPLE_KOJISEIGO);
+        currentIndex = 0; // 念のため1問目からにする
+        renderQuiz();
+    } else {
+        // まだ「続きを読む」の時は次のページへ
+        currentStep++;
+        renderStory();
+    }
+}
         let currentIndex = 0;
         let storyStep = 0;
         let showQuiz = false;
