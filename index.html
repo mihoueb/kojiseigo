@@ -718,6 +718,34 @@
                 [array[i], array[j]] = [array[j], array[i]];
             }
         }
+// 履歴を保存する関数
+        function saveHistory(currentScore, totalQuestions) {
+            // これまでの履歴を読み込む（なければ空の配列）
+            const history = JSON.parse(localStorage.getItem('quizHistory') || '[]');
+            
+            // 今回の成績を追加
+            const newRecord = {
+                date: new Date().toLocaleString(),
+                score: currentScore,
+                total: totalQuestions,
+                rate: Math.round((currentScore / totalQuestions) * 100)
+            };
+            history.push(newRecord);
+            
+            // 履歴を保存
+            localStorage.setItem('quizHistory', JSON.stringify(history));
+            return history;
+        }
+
+        // 累計の正答率を計算する関数
+        function getAverageRate() {
+            const history = JSON.parse(localStorage.getItem('quizHistory') || '[]');
+            if (history.length === 0) return 0;
+            
+            const totalScore = history.reduce((sum, rec) => sum + rec.score, 0);
+            const totalQuestions = history.reduce((sum, rec) => sum + rec.total, 0);
+            return Math.round((totalScore / totalQuestions) * 100);
+        }
         // ボタンが押された時の処理
 function handleNext() {
     if (isLastStep) {
@@ -794,12 +822,10 @@ function renderQuiz() {
             document.getElementById('mainCard').innerHTML = html;
         }
 
-        function renderResult() {
+function renderResult() {
             const current = currentQuizData[currentIndex];
-
-
-const isFinished = currentIndex === currentQuizData.length - 1;
             const isCorrect = selectedAnswer === current.idiom;
+            const isFinished = currentIndex === 7; // 8問完了
             
             const icon = isCorrect ? '✓' : '✗';
             const resultClass = isCorrect ? 'correct' : 'incorrect';
@@ -818,18 +844,25 @@ const isFinished = currentIndex === currentQuizData.length - 1;
                     </div>
                 </div>
             `;
-            
-            if (isFinished) {
-                html += `
+if (isFinished) {
+                // ここで成績を保存！
+                saveHistory(score, 8);
+                const avgRate = getAverageRate(); // 累計正答率を取得
+
+                let html = `
                     <div class="final-score">
-                        <h3>全問完了！</h3>
-                        <p>最終スコア: ${score} / ${SAMPLE_KOJISEIGO.length}</p>
-                        <button class="btn-primary" onclick="handleRestart()">
-                            ↻ 最初から始める
-                        </button>
+                        <h3>8問完了！お疲れ様！</h3>
+                        <p>今回のスコア: ${score} / 8</p>
+                        <hr>
+                        <p><strong>これまでの累計正答率: ${avgRate}%</strong></p>
+                        <button class="btn-primary" onclick="handleRestart()">↻ 別の8問に挑戦</button>
+                        <button class="btn-secondary" onclick="clearHistory()" style="margin-top:10px; font-size:12px;">履歴をリセット</button>
                     </div>
                 `;
-            } else {
+                document.getElementById('mainCard').innerHTML = html;
+                return; // ここで終了
+            }            
+ else {
                 html += `
                     <button class="btn-primary" onclick="handleNextQuestion()">
                         次の問題へ ›
