@@ -368,18 +368,82 @@
 
             .story-text {
                 font-size: 1.2rem;
-            }
-        }
+            }        }
+            /* 一覧表示用のスタイル */
+.list-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(26, 20, 16, 0.98);
+    z-index: 1000;
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 800px;
+    margin: 0 auto 2rem;
+}
+
+.list-table {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background: rgba(212, 175, 55, 0.05);
+}
+
+.list-table th, .list-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.list-table th {
+    color: #d4af37;
+    font-weight: 600;
+}
+
+.accuracy-badge {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+.high-rate { background: rgba(74, 222, 128, 0.2); color: #4ade80; }
+.low-rate { background: rgba(248, 113, 113, 0.2); color: #f87171; }
+
+.btn-close {
+    background: transparent;
+    border: 1px solid #d4af37;
+    color: #d4af37;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 8px;
+}
     </style>
 </head>
 <body>
     <div class="container">
         <!-- ヘッダー -->
-        <header>
-            <h1>故事成語の旅</h1>
-            <p class="subtitle">物語から学ぶ、古の知恵</p>
-        </header>
-
+<header>
+    <h1>故事成語の旅</h1>
+    <p class="subtitle">物語から学ぶ、古の知恵</p>
+    <button class="btn-secondary" onclick="toggleListView()" style="margin-top: 1rem;">語句一覧と正答率</button>
+</header>
+<div id="listView" class="list-container hidden">
+    <div class="list-header">
+        <h2>修得状況一覧</h2>
+        <button class="btn-close" onclick="toggleListView()">閉じる</button>
+    </div>
+    <div id="listTableWrapper">
+        </div>
+</div>
         <!-- 進捗バー -->
         <div class="progress-bar">
             <div class="progress-info">
@@ -393,24 +457,6 @@
 
         <!-- メインカード -->
         <div class="main-card" id="mainCard"></div>
-
-        <!-- データ構造説明 -->
-        <div class="data-structure">
-            <h3>データ構造（65個の故事成語を追加できます）</h3>
-            <pre>{
-  id: 番号,
-  idiom: "故事成語",
-  reading: "よみがな",
-  story: [
-    "ストーリーの第1段階",
-    "ストーリーの第2段階",
-    "ストーリーの第3段階",
-    ...
-  ],
-  meaning: "意味の説明",
-  usage: "用例",
-}</pre>
-        </div>
     </div>
 
     <script>
@@ -767,7 +813,92 @@ function handleNext() {
         let showResult = false;
         let score = 0;
         let answeredCount = 0;
+        let idiomStats = JSON.parse(localStorage.getItem('idiomStats') || '{}');
+// 統計を更新する関数
+function updateIdiomStat(idiom, isCorrect) {
+    if (!idiomStats[idiom]) {
+        idiomStats[idiom] = { correct: 0, total: 0 };
+    }
+    idiomStats[idiom].total += 1;
+    if (isCorrect) idiomStats[idiom].correct += 1;
+    
+    localStorage.setItem('idiomStats', JSON.stringify(idiomStats));
+}
 
+// --- 一覧表示の制御 ---
+function toggleListView() {
+    const listView = document.getElementById('listView');
+    if (listView.classList.contains('hidden')) {
+        renderIdiomList();
+        listView.classList.remove('hidden');
+    } else {
+        listView.classList.add('hidden');
+    }
+}
+
+function renderIdiomList() {
+    let html = `
+        <table class="list-table">
+            <thead>
+                <tr>
+                    <th>故事成語</th>
+                    <th>意味</th>
+                    <th>正答率</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    SAMPLE_KOJISEIGO.forEach(item => {
+        const stat = idiomStats[item.idiom] || { correct: 0, total: 0 };
+        const rate = stat.total === 0 ? 0 : Math.round((stat.correct / stat.total) * 100);
+        const rateClass = rate >= 80 ? 'high-rate' : (stat.total > 0 && rate < 50 ? 'low-rate' : '');
+
+        html += `
+            <tr>
+                <td style="font-weight:bold; color:#d4af37;">${item.idiom}</td>
+                <td style="font-size:0.9rem;">${item.meaning}</td>
+                <td>
+                    <span class="accuracy-badge ${rateClass}">${rate}%</span>
+                    <div style="font-size:0.7rem; color:rgba(244,228,193,0.5)">(${stat.correct}/${stat.total})</div>
+                </td>
+            </tr>
+        `;
+    });
+
+    html += `</tbody></table>`;
+    document.getElementById('listTableWrapper').innerHTML = html;
+}
+
+// --- 既存の handleAnswer 関数を少し修正 ---
+function handleAnswer(choice) {
+    selectedAnswer = choice;
+    showResult = true;
+    answeredCount++;
+    
+    const current = currentQuizData[currentIndex];
+    const isCorrect = (choice === current.idiom);
+    
+    if (isCorrect) {
+        score++;
+    }
+
+    // ★ここで語句ごとの統計を更新！
+    updateIdiomStat(current.idiom, isCorrect);
+    
+    // (以下、既存のボタン無効化やsetTimeoutの処理を続ける...)
+    const buttons = document.querySelectorAll('.choice-btn');
+    buttons.forEach(btn => {
+        btn.disabled = true;
+        if (btn.textContent === current.idiom) btn.classList.add('correct');
+        else if (btn.textContent === choice) btn.classList.add('incorrect');
+    });
+
+    setTimeout(() => {
+        updateProgress();
+        renderResult();
+    }, 1000);
+}
         function updateProgress() {
             document.getElementById('currentNum').textContent = currentIndex + 1;
             document.getElementById('totalNum').textContent = currentQuizData.length;
